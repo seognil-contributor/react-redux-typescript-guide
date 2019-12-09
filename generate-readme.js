@@ -1,8 +1,9 @@
 const fs = require('fs');
 
 const ROOT_PATH = `${__dirname}/`;
-const inputFiles = [ROOT_PATH + 'README_SOURCE.md'];
+const inputFiles = [ROOT_PATH + 'README_SOURCE-zh.md'];
 const outputFile = ROOT_PATH + 'README.md';
+// const outputFile = ROOT_PATH + 'README.zh.md';
 
 const result = inputFiles
     .map(filePath => fs.readFileSync(filePath, 'utf8'))
