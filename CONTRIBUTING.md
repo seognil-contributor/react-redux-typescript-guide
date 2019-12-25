@@ -6,7 +6,7 @@
 3. All workflow scripts (prettier, linter, tests) must pass successfully (it is run automatically on CI and will fail on github checks).
 
 ## Edit `README_SOURCE.md` to generate an updated `README.md`
-Don't edit `README.md` directly - it is generated automatically from `README_SOURCE.md` using an automated script.
+Don't edit `README.md` directly - it is generated automatically from `./src/i18n/README.md` using an automated script.
    - Use `sh ./generate-readme.sh` script to generate updated `README.md` (this will inject code examples using type-checked source files from the `/playground` folder)
    - So to make changes in code examples edit source files in `/playground` folder
 
