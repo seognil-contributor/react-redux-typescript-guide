@@ -4,8 +4,11 @@ const path = require('path');
 const ROOT_PATH = `${__dirname}/`;
 const SOURCE_FOLDER = './src/i18n';
 
-const inputFiles = fs.readdirSync(SOURCE_FOLDER);
-const outputFiles = inputFiles.map(mapToOutputPath);
+const inputFiles = ['README-zh.md'];
+const outputFiles = ['README.md'];
+
+// const inputFiles = fs.readdirSync(SOURCE_FOLDER);
+// const outputFiles = inputFiles.map(mapToOutputPath);
 
 const results = inputFiles
     .map(mapToSourcePath)
