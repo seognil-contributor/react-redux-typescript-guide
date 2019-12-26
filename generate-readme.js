@@ -1,16 +1,41 @@
 const fs = require('fs');
+const path = require('path');
 
 const ROOT_PATH = `${__dirname}/`;
-const inputFiles = [ROOT_PATH + 'README_SOURCE-zh.md'];
-const outputFile = ROOT_PATH + 'README.md';
-// const outputFile = ROOT_PATH + 'README.zh.md';
+const SOURCE_FOLDER = './src/i18n';
 
-const result = inputFiles
+const inputFiles = fs.readdirSync(SOURCE_FOLDER);
+const outputFiles = inputFiles.map(mapToOutputPath);
+
+const results = inputFiles
+    .map(mapToSourcePath)
     .map(filePath => fs.readFileSync(filePath, 'utf8'))
     .map(injectCodeBlocks)
     .map(injectExpanders);
 
-fs.writeFileSync(outputFile, result, 'utf8');
+outputFiles.forEach((path, index) => makeOutput(path, results[index]));
+
+// * ---------------- output function
+
+function makeOutput(outputFile, result) {
+    fs.writeFileSync(outputFile, result, 'utf8');
+}
+
+// * ---------------- path resolver
+
+function mapToSourcePath(subPath) {
+    return mapToFullPath(path.resolve(SOURCE_FOLDER, subPath));
+}
+
+function mapToOutputPath(subPath) {
+    return mapToFullPath(subPath);
+}
+
+function mapToFullPath(subPath) {
+    return path.resolve(ROOT_PATH, subPath);
+}
+
+// * ---------------- inject process
 
 function injectCodeBlocks(text) {
     const regex = /::codeblock='(.+?)'::/g;

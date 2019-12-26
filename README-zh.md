@@ -2,9 +2,6 @@
 
 # 用 TypeScript 写 React & Redux - 完全指南
 
-> 警告：我做了一个翻译 pr， 还没有 merge，所以我先开一个分支来看了。  
-> WARNING：I did a translation pr, but not merged to origin repo yet, so pre-build a branch to read ahead.
-
 _"这个指南是一个**最新的摘要**，记录了关于如何用 **TypeScript** 以**函数式风格**使用 **React**（以及相关生态）最重要的模式和示例。它会使你的代码在**从具体实现中进行类型推导**时绝对是**类型安全**的，这样就能减少来自过度类型声明的信息噪音，并更容易写出易于长期维护的正确类型声明。"_
 
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-redux-ts)
@@ -79,18 +76,7 @@ _觉得有帮助？想要更多更新？_
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [用 TypeScript 写 React & Redux - 完全指南](#%e7%94%a8-typescript-%e5%86%99-react--redux---%e5%ae%8c%e5%85%a8%e6%8c%87%e5%8d%97)
-    - [**更新了什么？**](#%e6%9b%b4%e6%96%b0%e4%ba%86%e4%bb%80%e4%b9%88)
-    - [**目标**](#%e7%9b%ae%e6%a0%87)
-    - [**React、Redux、Typescript 生态系统**](#reactreduxtypescript-%e7%94%9f%e6%80%81%e7%b3%bb%e7%bb%9f)
-    - [**示例**](#%e7%a4%ba%e4%be%8b)
-    - [**Playground 项目**](#playground-%e9%a1%b9%e7%9b%ae)
-  - [贡献指南](#%e8%b4%a1%e7%8c%ae%e6%8c%87%e5%8d%97)
-  - [赞助](#%e8%b5%9e%e5%8a%a9)
-  - [目录](#%e7%9b%ae%e5%bd%95)
-- [安装](#%e5%ae%89%e8%a3%85)
-    - [React & Redux 的类型定义](#react--redux-%e7%9a%84%e7%b1%bb%e5%9e%8b%e5%ae%9a%e4%b9%89)
-- [React - 类型定义速查表](#react---%e7%b1%bb%e5%9e%8b%e5%ae%9a%e4%b9%89%e9%80%9f%e6%9f%a5%e8%a1%a8)
+- [React - 类型定义速查表](#react---%E7%B1%BB%E5%9E%8B%E5%AE%9A%E4%B9%89%E9%80%9F%E6%9F%A5%E8%A1%A8)
     - [`React.FC<Props>` | `React.FunctionComponent<Props>`](#reactfcprops--reactfunctioncomponentprops)
     - [`React.Component<Props, State>`](#reactcomponentprops-state)
     - [`React.ComponentType<Props>`](#reactcomponenttypeprops)
@@ -101,86 +87,68 @@ _觉得有帮助？想要更多更新？_
     - [`React.HTMLProps<HTMLXXXElement>`](#reacthtmlpropshtmlxxxelement)
     - [`React.ReactEventHandler<HTMLXXXElement>`](#reactreacteventhandlerhtmlxxxelement)
     - [`React.XXXEvent<HTMLXXXElement>`](#reactxxxeventhtmlxxxelement)
-- [React - 类型模式](#react---%e7%b1%bb%e5%9e%8b%e6%a8%a1%e5%bc%8f)
+- [React - 类型模式](#react---%E7%B1%BB%E5%9E%8B%E6%A8%A1%E5%BC%8F)
   - [Function Components - FC](#function-components---fc)
-    - [- 计数器组件](#%e8%ae%a1%e6%95%b0%e5%99%a8%e7%bb%84%e4%bb%b6)
-    - [- 组件的 属性展开](#%e7%bb%84%e4%bb%b6%e7%9a%84-%e5%b1%9e%e6%80%a7%e5%b1%95%e5%bc%80)
+    - [- 计数器组件](#--%E8%AE%A1%E6%95%B0%E5%99%A8%E7%BB%84%E4%BB%B6)
+    - [- 组件的 属性展开](#--%E7%BB%84%E4%BB%B6%E7%9A%84-%E5%B1%9E%E6%80%A7%E5%B1%95%E5%BC%80)
   - [Class Components](#class-components)
-    - [- 计数器组件 Class 版](#%e8%ae%a1%e6%95%b0%e5%99%a8%e7%bb%84%e4%bb%b6-class-%e7%89%88)
-    - [- Class 组件和 default props](#class-%e7%bb%84%e4%bb%b6%e5%92%8c-default-props)
-  - [泛型组件](#%e6%b3%9b%e5%9e%8b%e7%bb%84%e4%bb%b6)
-    - [- 泛型列表组件](#%e6%b3%9b%e5%9e%8b%e5%88%97%e8%a1%a8%e7%bb%84%e4%bb%b6)
+    - [- 计数器组件 Class 版](#--%E8%AE%A1%E6%95%B0%E5%99%A8%E7%BB%84%E4%BB%B6-class-%E7%89%88)
+    - [- Class 组件和 default props](#--class-%E7%BB%84%E4%BB%B6%E5%92%8C-default-props)
+  - [泛型组件](#%E6%B3%9B%E5%9E%8B%E7%BB%84%E4%BB%B6)
+    - [- 泛型列表组件](#--%E6%B3%9B%E5%9E%8B%E5%88%97%E8%A1%A8%E7%BB%84%E4%BB%B6)
   - [Render Props](#render-props)
-    - [- Name Provider 组件](#name-provider-%e7%bb%84%e4%bb%b6)
-    - [- Mouse Provider 组件](#mouse-provider-%e7%bb%84%e4%bb%b6)
-  - [高阶组件](#%e9%ab%98%e9%98%b6%e7%bb%84%e4%bb%b6)
-    - [- 用 HOC 封装一个组件](#%e7%94%a8-hoc-%e5%b0%81%e8%a3%85%e4%b8%80%e4%b8%aa%e7%bb%84%e4%bb%b6)
-    - [- 用 HOC 封装组件并注入 props](#%e7%94%a8-hoc-%e5%b0%81%e8%a3%85%e7%bb%84%e4%bb%b6%e5%b9%b6%e6%b3%a8%e5%85%a5-props)
-    - [- 嵌套 HOC - 封装组件，props 注入，连接到 redux 🌟](#%e5%b5%8c%e5%a5%97-hoc---%e5%b0%81%e8%a3%85%e7%bb%84%e4%bb%b6props-%e6%b3%a8%e5%85%a5%e8%bf%9e%e6%8e%a5%e5%88%b0-redux-%f0%9f%8c%9f)
-  - [Redux 连接组件](#redux-%e8%bf%9e%e6%8e%a5%e7%bb%84%e4%bb%b6)
-    - [- Redux 版计数器](#redux-%e7%89%88%e8%ae%a1%e6%95%b0%e5%99%a8)
-    - [- Redux 版计数器，带自定义 props](#redux-%e7%89%88%e8%ae%a1%e6%95%b0%e5%99%a8%e5%b8%a6%e8%87%aa%e5%ae%9a%e4%b9%89-props)
-    - [- Redux 版计数器，集成 `redux-thunk`](#redux-%e7%89%88%e8%ae%a1%e6%95%b0%e5%99%a8%e9%9b%86%e6%88%90-redux-thunk)
+    - [- Name Provider 组件](#--name-provider-%E7%BB%84%E4%BB%B6)
+    - [- Mouse Provider 组件](#--mouse-provider-%E7%BB%84%E4%BB%B6)
+  - [高阶组件](#%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6)
+    - [- 用 HOC 封装一个组件](#--%E7%94%A8-hoc-%E5%B0%81%E8%A3%85%E4%B8%80%E4%B8%AA%E7%BB%84%E4%BB%B6)
+    - [- 用 HOC 封装组件并注入 props](#--%E7%94%A8-hoc-%E5%B0%81%E8%A3%85%E7%BB%84%E4%BB%B6%E5%B9%B6%E6%B3%A8%E5%85%A5-props)
+    - [- 嵌套 HOC - 封装组件，props 注入，连接到 redux 🌟](#--%E5%B5%8C%E5%A5%97-hoc---%E5%B0%81%E8%A3%85%E7%BB%84%E4%BB%B6props-%E6%B3%A8%E5%85%A5%E8%BF%9E%E6%8E%A5%E5%88%B0-redux-)
+  - [Redux 连接组件](#redux-%E8%BF%9E%E6%8E%A5%E7%BB%84%E4%BB%B6)
+    - [- Redux 版计数器](#--redux-%E7%89%88%E8%AE%A1%E6%95%B0%E5%99%A8)
+    - [- Redux 版计数器，带自定义 props](#--redux-%E7%89%88%E8%AE%A1%E6%95%B0%E5%99%A8%E5%B8%A6%E8%87%AA%E5%AE%9A%E4%B9%89-props)
+    - [- Redux 版计数器，集成 `redux-thunk`](#--redux-%E7%89%88%E8%AE%A1%E6%95%B0%E5%99%A8%E9%9B%86%E6%88%90-redux-thunk)
   - [Context](#context)
     - [ThemeContext](#themecontext)
     - [ThemeProvider](#themeprovider)
     - [ThemeConsumer](#themeconsumer)
-    - [ThemeConsumer Class 版](#themeconsumer-class-%e7%89%88)
+    - [ThemeConsumer Class 版](#themeconsumer-class-%E7%89%88)
   - [Hooks](#hooks)
-    - [- useState](#usestate)
-    - [- useReducer](#usereducer)
-    - [- useContext](#usecontext)
-- [Redux - 类型模式](#redux---%e7%b1%bb%e5%9e%8b%e6%a8%a1%e5%bc%8f)
-  - [Store 配置](#store-%e9%85%8d%e7%bd%ae)
-    - [创建全局 Store 类型](#%e5%88%9b%e5%bb%ba%e5%85%a8%e5%b1%80-store-%e7%b1%bb%e5%9e%8b)
-      - [`RootState` - 表示根 state 树的类型](#rootstate---%e8%a1%a8%e7%a4%ba%e6%a0%b9-state-%e6%a0%91%e7%9a%84%e7%b1%bb%e5%9e%8b)
-      - [`RootAction` - 表示所有 action 对象集合的类型](#rootaction---%e8%a1%a8%e7%a4%ba%e6%89%80%e6%9c%89-action-%e5%af%b9%e8%b1%a1%e9%9b%86%e5%90%88%e7%9a%84%e7%b1%bb%e5%9e%8b)
-    - [创建 Store](#%e5%88%9b%e5%bb%ba-store)
-  - [Action Creators 🌟](#action-creators-%f0%9f%8c%9f)
+    - [- useState](#--usestate)
+    - [- useReducer](#--usereducer)
+    - [- useContext](#--usecontext)
+- [Redux - 类型模式](#redux---%E7%B1%BB%E5%9E%8B%E6%A8%A1%E5%BC%8F)
+  - [Store 配置](#store-%E9%85%8D%E7%BD%AE)
+    - [创建全局 Store 类型](#%E5%88%9B%E5%BB%BA%E5%85%A8%E5%B1%80-store-%E7%B1%BB%E5%9E%8B)
+    - [创建 Store](#%E5%88%9B%E5%BB%BA-store)
+  - [Action Creators 🌟](#action-creators-)
   - [Reducers](#reducers)
-    - [拥有 Type 层面不可变性的 State](#%e6%8b%a5%e6%9c%89-type-%e5%b1%82%e9%9d%a2%e4%b8%8d%e5%8f%af%e5%8f%98%e6%80%a7%e7%9a%84-state)
-      - [警告 - `Readonly` 不是递归的](#%e8%ad%a6%e5%91%8a---readonly-%e4%b8%8d%e6%98%af%e9%80%92%e5%bd%92%e7%9a%84)
-      - [解决方案 - `Readonly` 的递归版本是 `DeepReadonly`](#%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88---readonly-%e7%9a%84%e9%80%92%e5%bd%92%e7%89%88%e6%9c%ac%e6%98%af-deepreadonly)
-    - [reducer 类型声明](#reducer-%e7%b1%bb%e5%9e%8b%e5%a3%b0%e6%98%8e)
-    - [使用 `typesafe-actions` 进行 reducer 类型声明](#%e4%bd%bf%e7%94%a8-typesafe-actions-%e8%bf%9b%e8%a1%8c-reducer-%e7%b1%bb%e5%9e%8b%e5%a3%b0%e6%98%8e)
-    - [测试 reducer](#%e6%b5%8b%e8%af%95-reducer)
-  - [使用 `redux-observable` 编写异步流](#%e4%bd%bf%e7%94%a8-redux-observable-%e7%bc%96%e5%86%99%e5%bc%82%e6%ad%a5%e6%b5%81)
-    - [epics 类型声明](#epics-%e7%b1%bb%e5%9e%8b%e5%a3%b0%e6%98%8e)
-    - [测试 epics](#%e6%b5%8b%e8%af%95-epics)
-  - [使用 `reselect` 生成 Selectors](#%e4%bd%bf%e7%94%a8-reselect-%e7%94%9f%e6%88%90-selectors)
-  - [使用 `react-redux` 的 connect 方法](#%e4%bd%bf%e7%94%a8-react-redux-%e7%9a%84-connect-%e6%96%b9%e6%b3%95)
-    - [连接组件类型声明](#%e8%bf%9e%e6%8e%a5%e7%bb%84%e4%bb%b6%e7%b1%bb%e5%9e%8b%e5%a3%b0%e6%98%8e)
-    - [连接组件类型声明，并集成 `redux-thunk`](#%e8%bf%9e%e6%8e%a5%e7%bb%84%e4%bb%b6%e7%b1%bb%e5%9e%8b%e5%a3%b0%e6%98%8e%e5%b9%b6%e9%9b%86%e6%88%90-redux-thunk)
-- [配置和开发者工具](#%e9%85%8d%e7%bd%ae%e5%92%8c%e5%bc%80%e5%8f%91%e8%80%85%e5%b7%a5%e5%85%b7)
-  - [通用 Npm Scripts](#%e9%80%9a%e7%94%a8-npm-scripts)
+    - [拥有 Type 层面不可变性的 State](#%E6%8B%A5%E6%9C%89-type-%E5%B1%82%E9%9D%A2%E4%B8%8D%E5%8F%AF%E5%8F%98%E6%80%A7%E7%9A%84-state)
+    - [reducer 类型声明](#reducer-%E7%B1%BB%E5%9E%8B%E5%A3%B0%E6%98%8E)
+    - [使用 `typesafe-actions` 进行 reducer 类型声明](#%E4%BD%BF%E7%94%A8-typesafe-actions-%E8%BF%9B%E8%A1%8C-reducer-%E7%B1%BB%E5%9E%8B%E5%A3%B0%E6%98%8E)
+    - [测试 reducer](#%E6%B5%8B%E8%AF%95-reducer)
+  - [使用 `redux-observable` 编写异步流](#%E4%BD%BF%E7%94%A8-redux-observable-%E7%BC%96%E5%86%99%E5%BC%82%E6%AD%A5%E6%B5%81)
+    - [epics 类型声明](#epics-%E7%B1%BB%E5%9E%8B%E5%A3%B0%E6%98%8E)
+    - [测试 epics](#%E6%B5%8B%E8%AF%95-epics)
+  - [使用 `reselect` 生成 Selectors](#%E4%BD%BF%E7%94%A8-reselect-%E7%94%9F%E6%88%90-selectors)
+  - [使用 `react-redux` 的 connect 方法](#%E4%BD%BF%E7%94%A8-react-redux-%E7%9A%84-connect-%E6%96%B9%E6%B3%95)
+    - [连接组件类型声明](#%E8%BF%9E%E6%8E%A5%E7%BB%84%E4%BB%B6%E7%B1%BB%E5%9E%8B%E5%A3%B0%E6%98%8E)
+    - [连接组件类型声明，并集成 `redux-thunk`](#%E8%BF%9E%E6%8E%A5%E7%BB%84%E4%BB%B6%E7%B1%BB%E5%9E%8B%E5%A3%B0%E6%98%8E%E5%B9%B6%E9%9B%86%E6%88%90-redux-thunk)
+- [配置和开发者工具](#%E9%85%8D%E7%BD%AE%E5%92%8C%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7)
+  - [通用 Npm Scripts](#%E9%80%9A%E7%94%A8-npm-scripts)
   - [tsconfig.json](#tsconfigjson)
   - [TSLib](#tslib)
   - [TSLint](#tslint)
-      - [tslint.json](#tslintjson)
   - [ESLint](#eslint)
-      - [.eslintrc](#eslintrc)
   - [Jest](#jest)
-      - [jest.config.json](#jestconfigjson)
-      - [jest.stubs.js](#jeststubsjs)
-  - [风格指南](#%e9%a3%8e%e6%a0%bc%e6%8c%87%e5%8d%97)
-    - ["react-styleguidist"](#%22react-styleguidist%22)
-- [食谱](#%e9%a3%9f%e8%b0%b1)
-    - [通用小贴士](#%e9%80%9a%e7%94%a8%e5%b0%8f%e8%b4%b4%e5%a3%ab)
-      - [- 使用 TS 时我还需要使用 React.PropTypes 吗？](#%e4%bd%bf%e7%94%a8-ts-%e6%97%b6%e6%88%91%e8%bf%98%e9%9c%80%e8%a6%81%e4%bd%bf%e7%94%a8-reactproptypes-%e5%90%97)
-      - [- 什么时候使用 `interface` 声明，什么时候使用 `type` 别名?](#%e4%bb%80%e4%b9%88%e6%97%b6%e5%80%99%e4%bd%bf%e7%94%a8-interface-%e5%a3%b0%e6%98%8e%e4%bb%80%e4%b9%88%e6%97%b6%e5%80%99%e4%bd%bf%e7%94%a8-type-%e5%88%ab%e5%90%8d)
-      - [- 具名 exports 和 default export 那个比较好？](#%e5%85%b7%e5%90%8d-exports-%e5%92%8c-default-export-%e9%82%a3%e4%b8%aa%e6%af%94%e8%be%83%e5%a5%bd)
-      - [- 什么是初始化 class 实例或静态属性的最佳实践？](#%e4%bb%80%e4%b9%88%e6%98%af%e5%88%9d%e5%a7%8b%e5%8c%96-class-%e5%ae%9e%e4%be%8b%e6%88%96%e9%9d%99%e6%80%81%e5%b1%9e%e6%80%a7%e7%9a%84%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5)
-      - [- 什么是声明组件 handler 方法的最佳实践？](#%e4%bb%80%e4%b9%88%e6%98%af%e5%a3%b0%e6%98%8e%e7%bb%84%e4%bb%b6-handler-%e6%96%b9%e6%b3%95%e7%9a%84%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5)
-    - [module 环境声明小贴士](#module-%e7%8e%af%e5%a2%83%e5%a3%b0%e6%98%8e%e5%b0%8f%e8%b4%b4%e5%a3%ab)
-      - [环境声明中的 imports](#%e7%8e%af%e5%a2%83%e5%a3%b0%e6%98%8e%e4%b8%ad%e7%9a%84-imports)
-    - [类型定义小贴士](#%e7%b1%bb%e5%9e%8b%e5%ae%9a%e4%b9%89%e5%b0%8f%e8%b4%b4%e5%a3%ab)
-      - [缺少类型定义的错误](#%e7%bc%ba%e5%b0%91%e7%b1%bb%e5%9e%8b%e5%ae%9a%e4%b9%89%e7%9a%84%e9%94%99%e8%af%af)
-      - [为 npm 模块使用自定义 `d.ts` 文件](#%e4%b8%ba-npm-%e6%a8%a1%e5%9d%97%e4%bd%bf%e7%94%a8%e8%87%aa%e5%ae%9a%e4%b9%89-dts-%e6%96%87%e4%bb%b6)
-    - [类型扩展小贴士](#%e7%b1%bb%e5%9e%8b%e6%89%a9%e5%b1%95%e5%b0%8f%e8%b4%b4%e5%a3%ab)
-      - [对库的内部声明进行扩展 - 使用相对路径 import](#%e5%af%b9%e5%ba%93%e7%9a%84%e5%86%85%e9%83%a8%e5%a3%b0%e6%98%8e%e8%bf%9b%e8%a1%8c%e6%89%a9%e5%b1%95---%e4%bd%bf%e7%94%a8%e7%9b%b8%e5%af%b9%e8%b7%af%e5%be%84-import)
-      - [对库的公开声明进行扩展 - 使用 node_modules import](#%e5%af%b9%e5%ba%93%e7%9a%84%e5%85%ac%e5%bc%80%e5%a3%b0%e6%98%8e%e8%bf%9b%e8%a1%8c%e6%89%a9%e5%b1%95---%e4%bd%bf%e7%94%a8-nodemodules-import)
-  - [教程和文章](#%e6%95%99%e7%a8%8b%e5%92%8c%e6%96%87%e7%ab%a0)
-  - [贡献者](#%e8%b4%a1%e7%8c%ae%e8%80%85)
+  - [风格指南](#%E9%A3%8E%E6%A0%BC%E6%8C%87%E5%8D%97)
+    - ["react-styleguidist"](#react-styleguidist)
+- [食谱](#%E9%A3%9F%E8%B0%B1)
+    - [通用小贴士](#%E9%80%9A%E7%94%A8%E5%B0%8F%E8%B4%B4%E5%A3%AB)
+    - [module 环境声明小贴士](#module-%E7%8E%AF%E5%A2%83%E5%A3%B0%E6%98%8E%E5%B0%8F%E8%B4%B4%E5%A3%AB)
+    - [类型定义小贴士](#%E7%B1%BB%E5%9E%8B%E5%AE%9A%E4%B9%89%E5%B0%8F%E8%B4%B4%E5%A3%AB)
+    - [类型扩展小贴士](#%E7%B1%BB%E5%9E%8B%E6%89%A9%E5%B1%95%E5%B0%8F%E8%B4%B4%E5%A3%AB)
+  - [教程和文章](#%E6%95%99%E7%A8%8B%E5%92%8C%E6%96%87%E7%AB%A0)
+  - [贡献者](#%E8%B4%A1%E7%8C%AE%E8%80%85)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -288,7 +256,35 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 ### - 计数器组件
 
-::codeblock='playground/src/components/fc-counter.tsx'::
+```tsx
+import * as React from 'react';
+
+type Props = {
+  label: string;
+  count: number;
+  onIncrement: () => void;
+};
+
+export const FCCounter: React.FC<Props> = props => {
+  const { label, count, onIncrement } = props;
+
+  const handleIncrement = () => {
+    onIncrement();
+  };
+
+  return (
+    <div>
+      <span>
+        {label}: {count}
+      </span>
+      <button type="button" onClick={handleIncrement}>
+        {`Increment`}
+      </button>
+    </div>
+  );
+};
+
+```
 
 [⟩⟩⟩ demo](https://piotrwitek.github.io/react-redux-typescript-guide/#fccounter)
 
@@ -296,7 +292,21 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 ### - 组件的 [属性展开](https://zh-hans.reactjs.org/docs/jsx-in-depth.html#spread-attributes)
 
-::codeblock='playground/src/components/fc-spread-attributes.tsx'::
+```tsx
+import * as React from 'react';
+
+type Props = {
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+export const FCSpreadAttributes: React.FC<Props> = props => {
+  const { children, ...restProps } = props;
+
+  return <div {...restProps}>{children}</div>;
+};
+
+```
 
 [⟩⟩⟩ demo](https://piotrwitek.github.io/react-redux-typescript-guide/#fcspreadattributes)
 
@@ -308,7 +318,45 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 ### - 计数器组件 Class 版
 
-::codeblock='playground/src/components/class-counter.tsx'::
+```tsx
+import * as React from 'react';
+
+type Props = {
+  label: string;
+};
+
+type State = {
+  count: number;
+};
+
+export class ClassCounter extends React.Component<Props, State> {
+  readonly state: State = {
+    count: 0,
+  };
+
+  handleIncrement = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    const { handleIncrement } = this;
+    const { label } = this.props;
+    const { count } = this.state;
+
+    return (
+      <div>
+        <span>
+          {label}: {count}
+        </span>
+        <button type="button" onClick={handleIncrement}>
+          {`Increment`}
+        </button>
+      </div>
+    );
+  }
+}
+
+```
 
 [⟩⟩⟩ demo](https://piotrwitek.github.io/react-redux-typescript-guide/#classcounter)
 
@@ -316,7 +364,53 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 ### - Class 组件和 default props
 
-::codeblock='playground/src/components/class-counter-with-default-props.tsx'::
+```tsx
+import * as React from 'react';
+
+type Props = {
+  label: string;
+  initialCount: number;
+};
+
+type State = {
+  count: number;
+};
+
+export class ClassCounterWithDefaultProps extends React.Component<
+  Props,
+  State
+> {
+  static defaultProps = {
+    initialCount: 0,
+  };
+
+  readonly state: State = {
+    count: this.props.initialCount,
+  };
+
+  handleIncrement = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    const { handleIncrement } = this;
+    const { label } = this.props;
+    const { count } = this.state;
+
+    return (
+      <div>
+        <span>
+          {label}: {count}
+        </span>
+        <button type="button" onClick={handleIncrement}>
+          {`Increment`}
+        </button>
+      </div>
+    );
+  }
+}
+
+```
 
 [⟩⟩⟩ demo](https://piotrwitek.github.io/react-redux-typescript-guide/#classcounterwithdefaultprops)
 
@@ -330,7 +424,27 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 ### - 泛型列表组件
 
-::codeblock='playground/src/components/generic-list.tsx'::
+```tsx
+import * as React from 'react';
+
+export interface GenericListProps<T> {
+  items: T[];
+  itemRenderer: (item: T) => JSX.Element;
+}
+
+export class GenericList<T> extends React.Component<GenericListProps<T>, {}> {
+  render() {
+    const { items, itemRenderer } = this.props;
+
+    return (
+      <div>
+        {items.map(itemRenderer)}
+      </div>
+    );
+  }
+}
+
+```
 
 [⟩⟩⟩ demo](https://piotrwitek.github.io/react-redux-typescript-guide/#genericlist)
 
@@ -344,7 +458,26 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 ### - Name Provider 组件
 > 将 children 用作 render prop 的简单组件
 
-::codeblock='playground/src/components/name-provider.tsx'::
+```tsx
+import * as React from 'react';
+
+interface NameProviderProps {
+  children: (state: NameProviderState) => React.ReactNode;
+}
+
+interface NameProviderState {
+  readonly name: string;
+}
+
+export class NameProvider extends React.Component<NameProviderProps, NameProviderState> {
+  readonly state: NameProviderState = { name: 'Piotr' };
+
+  render() {
+    return this.props.children(this.state);
+  }
+}
+
+```
 
 [⟩⟩⟩ demo](https://piotrwitek.github.io/react-redux-typescript-guide/#nameprovider)
 
@@ -353,7 +486,42 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 ### - Mouse Provider 组件
 > `Mouse` 组件的例子来源于 [Render Props - React 文档](https://zh-hans.reactjs.org/docs/render-props.html#use-render-props-for-cross-cutting-concerns)
 
-::codeblock='playground/src/components/mouse-provider.tsx'::
+```tsx
+import * as React from 'react';
+
+export interface MouseProviderProps {
+  render: (state: MouseProviderState) => React.ReactNode;
+}
+
+interface MouseProviderState {
+  readonly x: number;
+  readonly y: number;
+}
+
+export class MouseProvider extends React.Component<MouseProviderProps, MouseProviderState> {
+  readonly state: MouseProviderState = { x: 0, y: 0 };
+
+  handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    this.setState({
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
+
+  render() {
+    return (
+      <div style={{ height: '100%' }} onMouseMove={this.handleMouseMove}>
+        {/*
+          Instead of providing a static representation of what <Mouse> renders,
+          use the `render` prop to dynamically determine what to render.
+        */}
+        {this.props.render(this.state)}
+      </div>
+    );
+  }
+}
+
+```
 
 [⟩⟩⟩ demo](https://piotrwitek.github.io/react-redux-typescript-guide/#mouseprovider)
 
@@ -367,24 +535,252 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 ### - 用 HOC 封装一个组件
 给无状态的计数器加上状态
 
-::codeblock='playground/src/hoc/with-state.tsx'::
-::expander='playground/src/hoc/with-state.usage.tsx'::
+```tsx
+import React from 'react';
+import { Diff } from 'utility-types';
+
+// These props will be injected into the base component
+interface InjectedProps {
+  count: number;
+  onIncrement: () => void;
+}
+
+export const withState = <BaseProps extends InjectedProps>(
+  BaseComponent: React.ComponentType<BaseProps>
+) => {
+  type HocProps = Diff<BaseProps, InjectedProps> & {
+    // here you can extend hoc with new props
+    initialCount?: number;
+  };
+  type HocState = {
+    readonly count: number;
+  };
+
+  return class Hoc extends React.Component<HocProps, HocState> {
+    // Enhance component name for debugging and React-Dev-Tools
+    static displayName = `withState(${BaseComponent.name})`;
+    // reference to original wrapped component
+    static readonly WrappedComponent = BaseComponent;
+
+    readonly state: HocState = {
+      count: Number(this.props.initialCount) || 0,
+    };
+
+    handleIncrement = () => {
+      this.setState({ count: this.state.count + 1 });
+    };
+
+    render() {
+      const { ...restProps } = this.props;
+      const { count } = this.state;
+
+      return (
+        <BaseComponent
+          count={count} // injected
+          onIncrement={this.handleIncrement} // injected
+          {...(restProps as BaseProps)}
+        />
+      );
+    }
+  };
+};
+
+```
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+import * as React from 'react';
+
+import { withState } from '../hoc';
+import { FCCounter } from '../components';
+
+const FCCounterWithState = withState(FCCounter);
+
+export default () => <FCCounterWithState label={'FCCounterWithState'} />;
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
 ### - 用 HOC 封装组件并注入 props
 用 componentDidCatch 给任意组件加上错误处理功能
 
-::codeblock='playground/src/hoc/with-error-boundary.tsx'::
-::expander='playground/src/hoc/with-error-boundary.usage.tsx'::
+```tsx
+import React from 'react';
+
+const MISSING_ERROR = 'Error was swallowed during propagation.';
+
+export const withErrorBoundary = <BaseProps extends {}>(
+  BaseComponent: React.ComponentType<BaseProps>
+) => {
+  type HocProps = {
+    // here you can extend hoc with new props
+  };
+  type HocState = {
+    readonly error: Error | null | undefined;
+  };
+
+  return class Hoc extends React.Component<HocProps, HocState> {
+    // Enhance component name for debugging and React-Dev-Tools
+    static displayName = `withErrorBoundary(${BaseComponent.name})`;
+    // reference to original wrapped component
+    static readonly WrappedComponent = BaseComponent;
+
+    readonly state: HocState = {
+      error: undefined,
+    };
+
+    componentDidCatch(error: Error | null, info: object) {
+      this.setState({ error: error || new Error(MISSING_ERROR) });
+      this.logErrorToCloud(error, info);
+    }
+
+    logErrorToCloud = (error: Error | null, info: object) => {
+      // TODO: send error report to service provider
+    };
+
+    render() {
+      const { children, ...restProps } = this.props;
+      const { error } = this.state;
+
+      if (error) {
+        return <BaseComponent {...(restProps as BaseProps)} />;
+      }
+
+      return children;
+    }
+  };
+};
+
+```
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+import React, {useState} from 'react';
+
+import { withErrorBoundary } from '../hoc';
+import { ErrorMessage } from '../components';
+
+const ErrorMessageWithErrorBoundary =
+  withErrorBoundary(ErrorMessage);
+
+const BrokenComponent = () => {
+  throw new Error('I\'m broken! Don\'t render me.');
+};
+
+const BrokenButton = () => {
+  const [shouldRenderBrokenComponent, setShouldRenderBrokenComponent] =
+    useState(false);
+
+  if (shouldRenderBrokenComponent) {
+    return <BrokenComponent />;
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        setShouldRenderBrokenComponent(true);
+      }}
+    >
+      {`Throw nasty error`}
+    </button>
+  );
+};
+
+export default () => (
+  <ErrorMessageWithErrorBoundary>
+    <BrokenButton />
+  </ErrorMessageWithErrorBoundary>
+);
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
 ### - 嵌套 HOC - 封装组件，props 注入，连接到 redux 🌟
 用 componentDidCatch 给任意组件加上错误处理功能
 
-::codeblock='playground/src/hoc/with-connected-count.tsx'::
-::expander='playground/src/hoc/with-connected-count.usage.tsx'::
+```tsx
+import { RootState } from 'MyTypes';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Diff } from 'utility-types';
+import { countersActions, countersSelectors } from '../features/counters';
+
+// These props will be injected into the base component
+interface InjectedProps {
+  count: number;
+  onIncrement: () => void;
+}
+
+export const withConnectedCount = <BaseProps extends InjectedProps>(
+  BaseComponent: React.ComponentType<BaseProps>
+) => {
+  type HocProps = Diff<BaseProps, InjectedProps> & {
+    // here you can extend hoc with new props
+    initialCount?: number;
+  };
+
+  const mapStateToProps = (state: RootState) => ({
+    count: countersSelectors.getReduxCounter(state.counters),
+  });
+
+  const dispatchProps = {
+    onIncrement: countersActions.increment,
+  };
+
+  class Hoc extends React.Component<InjectedProps> {
+    // Enhance component name for debugging and React-Dev-Tools
+    static displayName = `withConnectedCount(${BaseComponent.name})`;
+    // reference to original wrapped component
+    static readonly WrappedComponent = BaseComponent;
+
+    render() {
+      const { count, onIncrement, ...restProps } = this.props;
+
+      return (
+        <BaseComponent
+          count={count} // injected
+          onIncrement={onIncrement} // injected
+          {...(restProps as BaseProps)}
+        />
+      );
+    }
+  }
+
+  const ConnectedHoc = connect<
+    ReturnType<typeof mapStateToProps>,
+    typeof dispatchProps,
+    HocProps,
+    RootState
+  >(
+    mapStateToProps,
+    dispatchProps
+  )(Hoc);
+
+  return ConnectedHoc;
+};
+
+```
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+import * as React from 'react';
+
+import { withConnectedCount } from '../hoc';
+import { FCCounter } from '../components';
+
+const FCCounterWithConnectedCount = withConnectedCount(FCCounter);
+
+export default () => (
+  <FCCounterWithConnectedCount initialCount={5} label={'FCCounterWithState'} />
+);
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
@@ -394,22 +790,164 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 ### - Redux 版计数器
 
-::codeblock='playground/src/connected/fc-counter-connected.tsx'::
-::expander='playground/src/connected/fc-counter-connected.usage.tsx'::
+```tsx
+import Types from 'MyTypes';
+import { connect } from 'react-redux';
+
+import { countersActions, countersSelectors } from '../features/counters';
+import { FCCounter } from '../components';
+
+const mapStateToProps = (state: Types.RootState) => ({
+  count: countersSelectors.getReduxCounter(state.counters),
+});
+
+const dispatchProps = {
+  onIncrement: countersActions.increment,
+};
+
+export const FCCounterConnected = connect(
+  mapStateToProps,
+  dispatchProps
+)(FCCounter);
+
+```
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+import * as React from 'react';
+
+import { FCCounterConnected } from '.';
+
+export default () => <FCCounterConnected label={'FCCounterConnected'} />;
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
 ### - Redux 版计数器，带自定义 props
 
-::codeblock='playground/src/connected/fc-counter-connected-own-props.tsx'::
-::expander='playground/src/connected/fc-counter-connected-own-props.usage.tsx'::
+```tsx
+import Types from 'MyTypes';
+import { connect } from 'react-redux';
+
+import { countersActions, countersSelectors } from '../features/counters';
+import { FCCounter } from '../components';
+
+type OwnProps = {
+  initialCount?: number;
+};
+
+const mapStateToProps = (state: Types.RootState, ownProps: OwnProps) => ({
+  count:
+    countersSelectors.getReduxCounter(state.counters) +
+    (ownProps.initialCount || 0),
+});
+
+const dispatchProps = {
+  onIncrement: countersActions.increment,
+};
+
+export const FCCounterConnectedOwnProps = connect(
+  mapStateToProps,
+  dispatchProps
+)(FCCounter);
+
+```
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+import * as React from 'react';
+
+import { FCCounterConnectedOwnProps } from '.';
+
+export default () => (
+  <FCCounterConnectedOwnProps
+    label={'FCCounterConnectedOwnProps'}
+    initialCount={10}
+  />
+);
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
 ### - Redux 版计数器，集成 `redux-thunk`
 
-::codeblock='playground/src/connected/fc-counter-connected-bind-action-creators.tsx'::
-::expander='playground/src/connected/fc-counter-connected-bind-action-creators.usage.tsx'::
+```tsx
+import Types from 'MyTypes';
+import { bindActionCreators, Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import * as React from 'react';
+
+import { countersActions } from '../features/counters';
+
+// Thunk Action
+const incrementWithDelay = () => async (dispatch: Dispatch): Promise<void> => {
+  setTimeout(() => dispatch(countersActions.increment()), 1000);
+};
+
+const mapStateToProps = (state: Types.RootState) => ({
+  count: state.counters.reduxCounter,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<Types.RootAction>) =>
+  bindActionCreators(
+    {
+      onIncrement: incrementWithDelay,
+    },
+    dispatch
+  );
+
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps> & {
+    label: string;
+  };
+
+export const FCCounter: React.FC<Props> = props => {
+  const { label, count, onIncrement } = props;
+
+  const handleIncrement = () => {
+    // Thunk action is correctly typed as promise
+    onIncrement().then(() => {
+      // ...
+    });
+  };
+
+  return (
+    <div>
+      <span>
+        {label}: {count}
+      </span>
+      <button type="button" onClick={handleIncrement}>
+        {`Increment`}
+      </button>
+    </div>
+  );
+};
+
+export const FCCounterConnectedBindActionCreators = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FCCounter);
+
+```
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+import * as React from 'react';
+
+import { FCCounterConnectedBindActionCreators } from '.';
+
+export default () => (
+  <FCCounterConnectedBindActionCreators
+    label={'FCCounterConnectedBindActionCreators'}
+  />
+);
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
@@ -419,23 +957,111 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 ### ThemeContext
 
-::codeblock='playground/src/context/theme-context.ts'::
+```tsx
+import * as React from 'react';
+
+export type Theme = React.CSSProperties;
+
+type Themes = {
+  dark: Theme;
+  light: Theme;
+};
+
+export const themes: Themes = {
+  dark: {
+    color: 'black',
+    backgroundColor: 'white',
+  },
+  light: {
+    color: 'white',
+    backgroundColor: 'black',
+  },
+};
+
+export type ThemeContextProps = { theme: Theme; toggleTheme?: () => void };
+const ThemeContext = React.createContext<ThemeContextProps>({ theme: themes.light });
+
+export default ThemeContext;
+
+```
 
 [⇧ 返回顶部](#目录)
 
 ### ThemeProvider
 
-::codeblock='playground/src/context/theme-provider.tsx'::
+```tsx
+import React from 'react';
+import ThemeContext, { themes, Theme } from './theme-context';
+import ToggleThemeButton from './theme-consumer';
+
+interface State {
+  theme: Theme;
+}
+export class ThemeProvider extends React.Component<{}, State> {
+  readonly state: State = { theme: themes.light };
+
+  toggleTheme = () => {
+    this.setState(state => ({
+      theme: state.theme === themes.light ? themes.dark : themes.light,
+    }));
+  }
+
+  render() {
+    const { theme } = this.state;
+    const { toggleTheme } = this;
+    return (
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ToggleThemeButton />
+      </ThemeContext.Provider>
+    );
+  }
+}
+
+```
 
 [⇧ 返回顶部](#目录)
 
 ### ThemeConsumer
 
-::codeblock='playground/src/context/theme-consumer.tsx'::
+```tsx
+import * as React from 'react';
+import ThemeContext from './theme-context';
+
+type Props = {};
+
+export default function ToggleThemeButton(props: Props) {
+  return (
+    <ThemeContext.Consumer>
+      {({ theme, toggleTheme }) => <button style={theme} onClick={toggleTheme} {...props} />}
+    </ThemeContext.Consumer>
+  );
+}
+
+```
 
 ### ThemeConsumer Class 版
 
-::codeblock='playground/src/context/theme-consumer-class.tsx'::
+```tsx
+import * as React from 'react';
+import ThemeContext from './theme-context';
+
+type Props = {};
+
+export class ToggleThemeButtonClass extends React.Component<Props> {
+  static contextType = ThemeContext;
+  context!: React.ContextType<typeof ThemeContext>;
+
+  render() {
+    const { theme, toggleTheme } = this.context;
+    return (
+      <button style={theme} onClick={toggleTheme}>
+        Toggle Theme
+      </button>
+    );
+  }
+}
+
+```
 
 [Implementation with Hooks](#--usecontext)
 
@@ -449,14 +1075,74 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 > https://zh-hans.reactjs.org/docs/hooks-reference.html#usestate
 
-::codeblock='playground/src/hooks/use-state.tsx'::
+```tsx
+import * as React from 'react';
+
+type Props = { initialCount: number };
+
+export default function Counter({initialCount}: Props) {
+  const [count, setCount] = React.useState(initialCount);
+  return (
+    <>
+      Count: {count}
+      <button onClick={() => setCount(initialCount)}>Reset</button>
+      <button onClick={() => setCount(prevCount => prevCount + 1)}>+</button>
+      <button onClick={() => setCount(prevCount => prevCount - 1)}>-</button>
+    </>
+  );
+}
+
+```
 
 [⇧ 返回顶部](#目录)
 
 ### - useReducer
 用于函数组件的状态管理 Hook （类似 Redux）。
 
-::codeblock='playground/src/hooks/use-reducer.tsx'::
+```tsx
+import * as React from 'react';
+
+interface State {
+  count: number;
+}
+
+type Action = { type: 'reset' } | { type: 'increment' } | { type: 'decrement' };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'increment':
+      return { count: state.count + 1 };
+    case 'decrement':
+      return { count: state.count - 1 };
+    case 'reset':
+      return { count: 0 };
+    default:
+      throw new Error();
+  }
+}
+
+interface CounterProps {
+  initialCount: number;
+}
+
+function Counter({ initialCount }: CounterProps) {
+  const [state, dispatch] = React.useReducer(reducer, {
+    count: initialCount,
+  });
+
+  return (
+    <>
+      Count: {state.count}
+      <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>
+      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+    </>
+  );
+}
+
+export default Counter;
+
+```
 
 [⇧ 返回顶部](#目录)
 
@@ -464,7 +1150,22 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 > https://zh-hans.reactjs.org/docs/hooks-reference.html#usecontext
 
-::codeblock='playground/src/hooks/use-theme-context.tsx'::
+```tsx
+import * as React from 'react';
+import ThemeContext from '../context/theme-context';
+
+type Props = {};
+
+export default function ThemeToggleButton(props: Props) {
+  const { theme, toggleTheme } = React.useContext(ThemeContext);
+  return (
+    <button onClick={toggleTheme} style={theme} >
+      Toggle Theme
+    </button>
+  );
+}
+
+```
 
 [⇧ 返回顶部](#目录)
 
@@ -482,7 +1183,22 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 #### `RootAction` - 表示所有 action 对象集合的类型
 可以作为 import，用于不同层次中（reducers, sagas 或 redux-observables epics）接收和发送 redux actions
 
-::codeblock='playground/src/store/types.d.ts'::
+```tsx
+import { StateType, ActionType } from 'typesafe-actions';
+
+declare module 'MyTypes' {
+  export type Store = StateType<typeof import('./index').default>;
+  export type RootAction = ActionType<typeof import('./root-action').default>;
+  export type RootState = StateType<ReturnType<typeof import('./root-reducer').default>>;
+}
+
+declare module 'typesafe-actions' {
+  interface Types {
+    RootAction: ActionType<typeof import('./root-action').default>;
+  }
+}
+
+```
 
 [⇧ 返回顶部](#目录)
 
@@ -491,7 +1207,49 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 当创建 store 实例时，我们不需要编写任何额外的类型，它会通过类型推断自动建立一个**类型安全的 Store 实例**。
 > 生成的 store 实例中的方法（像 `getState` 和 `dispatch`）将支持类型检查，并能够暴露所有的类型错误。
 
-::codeblock='playground/src/store/index.ts'::
+```tsx
+import { RootAction, RootState, Services } from 'MyTypes';
+import { createStore, applyMiddleware } from 'redux';
+import { createEpicMiddleware } from 'redux-observable';
+import { createBrowserHistory } from 'history';
+import { routerMiddleware as createRouterMiddleware } from 'connected-react-router';
+
+import { composeEnhancers } from './utils';
+import rootReducer from './root-reducer';
+import rootEpic from './root-epic';
+import services from '../services';
+
+// browser history
+export const history = createBrowserHistory();
+
+export const epicMiddleware = createEpicMiddleware<
+  RootAction,
+  RootAction,
+  RootState,
+  Services
+>({
+  dependencies: services,
+});
+
+const routerMiddleware = createRouterMiddleware(history);
+
+// configure middlewares
+const middlewares = [epicMiddleware, routerMiddleware];
+// compose enhancers
+const enhancer = composeEnhancers(applyMiddleware(...middlewares));
+
+// rehydrate state on app start
+const initialState = {};
+
+// create store
+const store = createStore(rootReducer(history), initialState, enhancer);
+
+epicMiddleware.run(rootEpic);
+
+// export store singleton instance
+export default store;
+
+```
 
 ---
 
@@ -503,8 +1261,51 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 
 下面的方案用一个简单的工厂函数来自动创建类型安全的 action creators。目的是减少重复的 actions 和 creators 类型声明代码，并减少代码维护工作。生成结果是绝对类型安全的 action-creators 及其 actions。
 
-::codeblock='playground/src/features/counters/actions.ts'::
-::expander='playground/src/features/counters/actions.usage.ts'::
+```tsx
+import { action } from 'typesafe-actions';
+
+import { ADD, INCREMENT } from './constants';
+
+/* SIMPLE API */
+
+export const increment = () => action(INCREMENT);
+export const add = (amount: number) => action(ADD, amount);
+
+/* ADVANCED API */
+
+// More flexible allowing to create complex actions more easily
+// use can use "action-creator" instance in place of "type constant"
+// e.g. case getType(increment): return action.payload;
+// This will allow to completely eliminate need for "constants" in your application, more info here:
+// https://github.com/piotrwitek/typesafe-actions#constants
+
+import { createAction } from 'typesafe-actions';
+import { Todo } from '../todos/models';
+
+export const emptyAction = createAction(INCREMENT)<void>();
+export const payloadAction = createAction(ADD)<number>();
+export const payloadMetaAction = createAction(ADD)<number, string>();
+
+export const payloadCreatorAction = createAction(
+  'TOGGLE_TODO',
+  (todo: Todo) => todo.id
+)<string>();
+
+```
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+import store from '../../store';
+import { countersActions as counter } from '../counters';
+
+// store.dispatch(counter.increment(1)); // Error: Expected 0 arguments, but got 1.
+store.dispatch(counter.increment()); // OK
+
+// store.dispatch(counter.add()); // Error: Expected 1 arguments, but got 0.
+store.dispatch(counter.add(1)); // OK
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
@@ -580,20 +1381,148 @@ state.containerObject.numbers.push(1); // TS Error: cannot use mutator methods
 
 > 为了理解下一小节，请确保了解 [类型推论](https://www.tslang.cn/docs/handbook/type-inference.html)，[基于控制流的类型分析](https://www.tslang.cn/docs/release-notes/typescript-2.0.html) 以及 [标记联合类型](https://www.tslang.cn/docs/release-notes/typescript-2.0.html)
 
-::codeblock='playground/src/features/todos/reducer.ts'::
+```tsx
+import { combineReducers } from 'redux';
+import { ActionType } from 'typesafe-actions';
+
+import { Todo, TodosFilter } from './models';
+import * as actions from './actions';
+import { ADD, CHANGE_FILTER, TOGGLE } from './constants';
+
+export type TodosAction = ActionType<typeof actions>;
+
+export type TodosState = Readonly<{
+  todos: Todo[];
+  todosFilter: TodosFilter;
+}>;
+const initialState: TodosState = {
+  todos: [],
+  todosFilter: TodosFilter.All,
+};
+
+export default combineReducers<TodosState, TodosAction>({
+  todos: (state = initialState.todos, action) => {
+    switch (action.type) {
+      case ADD:
+        return [...state, action.payload];
+
+      case TOGGLE:
+        return state.map(item =>
+          item.id === action.payload
+            ? { ...item, completed: !item.completed }
+            : item
+        );
+
+      default:
+        return state;
+    }
+  },
+  todosFilter: (state = initialState.todosFilter, action) => {
+    switch (action.type) {
+      case CHANGE_FILTER:
+        return action.payload;
+
+      default:
+        return state;
+    }
+  },
+});
+
+```
 
 [⇧ 返回顶部](#目录)
 
 ### 使用 `typesafe-actions` 进行 reducer 类型声明
 > 请注意，我们不需要在 API 上使用任何泛型类型参数。可以和传统的 reducer 写法进行比较，它们是等价的。
 
-::codeblock='playground/src/features/todos/reducer-ta.ts'::
+```tsx
+import { combineReducers } from 'redux';
+import { createReducer } from 'typesafe-actions';
+
+import { Todo, TodosFilter } from './models';
+import { ADD, CHANGE_FILTER, TOGGLE } from './constants';
+
+export type TodosState = Readonly<{
+  todos: Todo[];
+  todosFilter: TodosFilter;
+}>;
+const initialState: TodosState = {
+  todos: [],
+  todosFilter: TodosFilter.All,
+};
+
+const todos = createReducer(initialState.todos)
+  .handleType(ADD, (state, action) => [...state, action.payload])
+  .handleType(TOGGLE, (state, action) =>
+    state.map(item =>
+      item.id === action.payload
+        ? { ...item, completed: !item.completed }
+        : item
+    )
+  );
+
+const todosFilter = createReducer(initialState.todosFilter).handleType(
+  CHANGE_FILTER,
+  (state, action) => action.payload
+);
+
+export default combineReducers({
+  todos,
+  todosFilter,
+});
+
+```
 
 [⇧ 返回顶部](#目录)
 
 ### 测试 reducer
 
-::codeblock='playground/src/features/todos/reducer.spec.ts'::
+```tsx
+import {
+  todosReducer as reducer,
+  todosActions as actions,
+  TodosState,
+} from './';
+
+/**
+ * FIXTURES
+ */
+const getInitialState = (initial?: Partial<TodosState>) =>
+  reducer(initial as TodosState, {} as any);
+
+/**
+ * STORIES
+ */
+describe('Todos Stories', () => {
+  describe('initial state', () => {
+    it('should match a snapshot', () => {
+      const initialState = getInitialState();
+      expect(initialState).toMatchSnapshot();
+    });
+  });
+
+  describe('adding todos', () => {
+    it('should add a new todo as the first element', () => {
+      const initialState = getInitialState();
+      expect(initialState.todos).toHaveLength(0);
+      const state = reducer(initialState, actions.add('new todo'));
+      expect(state.todos).toHaveLength(1);
+      expect(state.todos[0].title).toEqual('new todo');
+    });
+  });
+
+  describe('toggling completion state', () => {
+    it('should mark active todo as complete', () => {
+      const activeTodo = { id: '1', completed: false, title: 'active todo' };
+      const initialState = getInitialState({ todos: [activeTodo] });
+      expect(initialState.todos[0].completed).toBeFalsy();
+      const state1 = reducer(initialState, actions.toggle(activeTodo.id));
+      expect(state1.todos[0].completed).toBeTruthy();
+    });
+  });
+});
+
+```
 
 [⇧ 返回顶部](#目录)
 
@@ -603,13 +1532,91 @@ state.containerObject.numbers.push(1); // TS Error: cannot use mutator methods
 
 ### epics 类型声明
 
-::codeblock='playground/src/features/todos/epics.ts'::
+```tsx
+import { RootAction, RootState, Services } from 'MyTypes';
+import { Epic } from 'redux-observable';
+import { tap, ignoreElements, filter } from 'rxjs/operators';
+import { isOfType } from 'typesafe-actions';
+
+import { todosConstants } from '../todos';
+
+// contrived example!!!
+export const logAddAction: Epic<RootAction, RootAction, RootState, Services> = (
+  action$,
+  state$,
+  { logger }
+) =>
+  action$.pipe(
+    filter(isOfType(todosConstants.ADD)), // action is narrowed to: { type: "ADD_TODO"; payload: string; }
+    tap(action => {
+      logger.log(
+        `action type must be equal: ${todosConstants.ADD} === ${action.type}`
+      );
+    }),
+    ignoreElements()
+  );
+
+```
 
 [⇧ 返回顶部](#目录)
 
 ### 测试 epics
 
-::codeblock='playground/src/features/todos/epics.spec.ts'::
+```tsx
+import { StateObservable, ActionsObservable } from 'redux-observable';
+import { RootState, Services, RootAction } from 'MyTypes';
+import { Subject } from 'rxjs';
+
+import { add } from './actions';
+import { logAddAction } from './epics';
+
+// Simple typesafe mock of all the services, you dont't need to mock anything else
+// It is decoupled and reusable for all your tests, just put it in a separate file
+const services = {
+  logger: {
+    log: jest.fn<Services['logger']['log']>(),
+  },
+  localStorage: {
+    loadState: jest.fn<Services['localStorage']['loadState']>(),
+    saveState: jest.fn<Services['localStorage']['saveState']>(),
+  },
+};
+
+describe('Todos Epics', () => {
+  let state$: StateObservable<RootState>;
+
+  beforeEach(() => {
+    state$ = new StateObservable<RootState>(
+      new Subject<RootState>(),
+      undefined as any
+    );
+  });
+
+  describe('logging todos actions', () => {
+    beforeEach(() => {
+      services.logger.log.mockClear();
+    });
+
+    it('should call the logger service when adding a new todo', done => {
+      const addTodoAction = add('new todo');
+      const action$ = ActionsObservable.of(addTodoAction);
+
+      logAddAction(action$, state$, services)
+        .toPromise()
+        .then((outputAction: RootAction) => {
+          expect(services.logger.log).toHaveBeenCalledTimes(1);
+          expect(services.logger.log).toHaveBeenCalledWith(
+            'action type must be equal: todos/ADD === todos/ADD'
+          );
+          // expect output undefined because we're using "ignoreElements" in epic
+          expect(outputAction).toEqual(undefined);
+          done();
+        });
+    });
+  });
+});
+
+```
 
 [⇧ 返回顶部](#目录)
 
@@ -617,7 +1624,28 @@ state.containerObject.numbers.push(1); // TS Error: cannot use mutator methods
 
 ## 使用 `reselect` 生成 Selectors
 
-::codeblock='playground/src/features/todos/selectors.ts'::
+```tsx
+import { createSelector } from 'reselect';
+
+import { TodosState } from './reducer';
+
+export const getTodos = (state: TodosState) => state.todos;
+
+export const getTodosFilter = (state: TodosState) => state.todosFilter;
+
+export const getFilteredTodos = createSelector(getTodos, getTodosFilter, (todos, todosFilter) => {
+  switch (todosFilter) {
+    case 'completed':
+      return todos.filter(t => t.completed);
+    case 'active':
+      return todos.filter(t => !t.completed);
+
+    default:
+      return todos;
+  }
+});
+
+```
 
 [⇧ 返回顶部](#目录)
 
@@ -725,7 +1753,23 @@ type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 我们有推荐的 `tsconfig.json` 配置文件，你可以借助 [`react-redux-typescript-scripts`](https://github.com/piotrwitek/react-redux-typescript-scripts) 方便地把它添加到你的项目里。
 
-::expander='playground/tsconfig.json'::
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+{
+  "include": [
+    "src",
+    "typings"
+  ],
+  "exclude": [
+    "src/**/*.spec.*"
+  ],
+  "extends": "./node_modules/react-redux-typescript-scripts/tsconfig.json",
+  "compilerOptions": {}
+}
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
@@ -757,7 +1801,21 @@ https://palantir.github.io/tslint/
 我们有推荐配置文件，你可以借助 [`react-redux-typescript-scripts`](https://github.com/piotrwitek/react-redux-typescript-scripts) 方便地把它添加到你的项目里。
 
 #### tslint.json
-::expander='playground/tslint.json'::
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+{
+  "extends": [
+    "./node_modules/react-redux-typescript-scripts/tslint.json",
+    "./node_modules/react-redux-typescript-scripts/tslint-react.json"
+  ],
+  "rules": {
+    // you can further customize options here
+  }
+}
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
@@ -771,7 +1829,21 @@ https://typescript-eslint.io
 我们有推荐配置文件，他会自动添加 TypeScript 的解析器和插件，你可以借助 [`react-redux-typescript-scripts`](https://github.com/piotrwitek/react-redux-typescript-scripts) 方便地把它添加到你的项目里。
 
 #### .eslintrc
-::expander='playground/.eslintrc'::
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+{
+  "extends": [
+    "react-app",
+    "./node_modules/react-redux-typescript-scripts/eslint.js"
+  ],
+  "rules": {
+    // you can further customize options here
+  }
+}
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
@@ -782,10 +1854,58 @@ https://jestjs.io/
 `npm i -D jest ts-jest @types/jest`
 
 #### jest.config.json
-::expander='configs/jest.config.json'::
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+{
+  "verbose": true,
+  "transform": {
+    ".(ts|tsx)": "ts-jest"
+  },
+  "testRegex": "(/spec/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+  "moduleFileExtensions": ["ts", "tsx", "js"],
+  "moduleNameMapper": {
+    "^Components/(.*)": "./src/components/$1"
+  },
+  "globals": {
+    "window": {},
+    "ts-jest": {
+      "tsConfig": "./tsconfig.json"
+    }
+  },
+  "setupFiles": ["./jest.stubs.js"],
+  "testURL": "http://localhost/"
+}
+
+```
+</p></details>
 
 #### jest.stubs.js
-::expander='configs/jest.stubs.js'::
+<details><summary><i>Click to expand</i></summary><p>
+
+```tsx
+// Global/Window object Stubs for Jest
+window.matchMedia = window.matchMedia || function () {
+  return {
+    matches: false,
+    addListener: function () { },
+    removeListener: function () { },
+  };
+};
+
+window.requestAnimationFrame = function (callback) {
+  setTimeout(callback);
+};
+
+window.localStorage = {
+  getItem: function () { },
+  setItem: function () { },
+};
+
+Object.values = () => [];
+
+```
+</p></details>
 
 [⇧ 返回顶部](#目录)
 
@@ -911,7 +2031,12 @@ declare module "react-custom-scrollbars" {
 #### 缺少类型定义的错误
 如果你找不到第三方模块的类型声明，你可以自己写一个，或借助 [Shorthand Ambient Modules](https://github.com/Microsoft/TypeScript-Handbook/blob/master/pages/Modules.md#shorthand-ambient-modules) 禁用该模块的类型检查。
 
-::codeblock='playground/typings/modules.d.ts'::
+```tsx
+// typings/modules.d.ts
+declare module 'MyTypes';
+declare module 'react-test-renderer';
+
+```
 
 #### 为 npm 模块使用自定义 `d.ts` 文件
 如果你想为（自带类型定义的）某些 npm 模块使用替代的（自定义的）类型定义，你可以通过覆写编译选项中 `paths` 字段来实现。
